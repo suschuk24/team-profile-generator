@@ -13,7 +13,7 @@ const { writeFile, copyFile } = require('./generate-site')
 
 const employeeList = []
 
-function managerInfo() {
+const managerInfo = () => {
     inquirer
       .prompt([
           {
@@ -84,8 +84,167 @@ function managerInfo() {
               answers.officeNum
           );
           employeeList.push(manager);
-          console.log([answers])
+          console.log(employeeList)
       })
 }
 
+
+const addEmployee = () => {
+    console.log(`
+    ======================
+    Add a New Employee
+    ======================
+    `)
+    inquirer
+      .prompt([
+          {
+              type: 'input',
+              name: 'name',
+              message: "Please add an employee's name",
+              validate: (nameInput) => {
+                if(nameInput) {
+                    return true;
+                } else {
+                    console.log('You cannot leave this field blank')
+                    return false
+                }
+            },
+          },
+          {
+              type: 'input',
+              name: 'id',
+              message: "Enter the employee ID number",
+              validate: (IDInput) => {
+                if(IDInput) {
+                    return true;
+                } else {
+                    console.log('You cannot leave this field blank')
+                    return false
+                }
+            },
+          },
+          {
+              type: 'list',
+              name: 'role',
+              message: "Choose an Employee Category",
+              choices: ['Engineer', 'Intern' ]
+          },
+          {
+            type: 'input',
+            name: 'email',
+            message: "Enter the Employee's email address",
+            validate: (emailInput) => {
+              if(emailInput) {
+                  return true;
+              } else {
+                  console.log('You cannot leave this field blank')
+                  return false
+              }
+            },
+        },
+      ])
+      .then((answers) => {
+          if(answers.role === 'Engineer') {
+              inquirer
+                .prompt([
+                    {
+                        type: 'input',
+                        name: 'github',
+                        message: "Enter the engineer's github username",
+                        validate: (githubInput) => {
+                            if(githubInput) {
+                                return true;
+                            } else {
+                                console.log('You cannot leave this field blank')
+                                return false
+                            }
+                          },
+
+                    }
+                ])
+                .then((roleUpdate) => {
+                    const engineer = new Engineer(
+                      answers.name,
+                      answers.id,
+                      answers.role,
+                      answers.email,
+                      roleUpdate.github
+                    );
+                    employeeList.push(engineer)
+                    console.log(employeeList)
+                    addAnotherEmployee(employeeList)
+
+                });
+          } if (answers.role === 'Intern') {
+              inquirer
+                .prompt([
+                    {
+                        type: 'input',
+                        name: 'school',
+                        message: "Enter the intern's school name",
+                        validate: (internInput) => {
+                            if(internInput) {
+                                return true;
+                            } else {
+                                console.log('You cannot leave this field blank')
+                                return false
+                            }
+                          },
+                    }
+                ])
+                .then((roleUpdate) => {
+                    const intern = new Intern(
+                        answers.name,
+                        answers.id,
+                        answers.role,
+                        answers.email,
+                        roleUpdate.school
+                      );
+                      employeeList.push(intern)
+                      console.log(employeeList)
+                      addAnotherEmployee(employeeList)
+                });
+          }
+      });
+};
+
+const addAnotherEmployee = (team) => {
+    inquirer
+      .prompt([
+          {
+              type: 'confirm',
+              name: 'addNewEmployee',
+              message: 'Would you like to add another employee?',
+              default: false
+          },
+      ])
+      .then((employeeListArr) => {
+          if(employeeListArr.addNewEmployee) {
+              return addEmployee(employeeList)
+          } if(!employeeListArr.addNewEmployee) {
+            console.log(employeeList)  
+            return employeeList
+          }
+      })
+}
+  
 managerInfo()
+// addEmployee()
+//  addAnotherEmployee()
+//   .then(addEmployee)
+    // .then((employeeList) => {
+    //     return generatePage(employeeList)
+    // })
+    // .then((HTML) => {
+    //     return writeFile(HTML)
+    // })
+    // .then((writeFileResponse) => {
+    //     console.log(writeFileResponse)
+    //     return copyFile()
+    // }) 
+    // .then((copyFileResponse) => {
+    //     console.log(copyFileResponse);
+    //   })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
