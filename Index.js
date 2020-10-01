@@ -13,34 +13,28 @@ const { writeFile, copyFile } = require('./generate-site')
 
 const employeeList = []
 
+const validateFcn = input => {
+    if(input) {
+        return true;
+    } else {
+        console.log('You cannot leave this field blank');
+    };
+}
+
 const managerInfo = () => {
     inquirer
       .prompt([
           {
               type: 'input',
               name: 'name',
-              message: "Please enter an Employee's Name (Start with Manager)",
-              validate: (nameInput) => {
-                  if(nameInput) {
-                      return true;
-                  } else {
-                      console.log('You cannot leave this field blank')
-                      return false
-                  }
-              },
+              message: "Please the Manager's Name (all fields are required)",
+              validate: validateFcn
           },
           {
               type: 'input',
               name: 'id',
               message: "Enter the Manager's ID number",
-              validate: (IDInput) => {
-                if(IDInput) {
-                    return true;
-                } else {
-                    console.log('You cannot leave this field blank')
-                    return false
-                }
-            },
+              validate: validateFcn
           },
           {
               type: 'list',
@@ -52,27 +46,13 @@ const managerInfo = () => {
               type: 'input',
               name: 'email',
               message: "Enter the manager's email address",
-              validate: (emailInput) => {
-                if(emailInput) {
-                    return true;
-                } else {
-                    console.log('You cannot leave this field blank')
-                    return false
-                }
-              },
+              validate: validateFcn
           },
           {
               type: 'input',
               name: 'officeNum',
               message: "Enter the Manager's office number",
-              validate: (officeNumInput) => {
-                if(officeNumInput) {
-                    return true;
-                } else {
-                    console.log('You cannot leave this field blank')
-                    return false
-                }
-            }
+              validate: validateFcn
           },
       ])
       .then((answers) => {
@@ -101,27 +81,13 @@ const addEmployee = () => {
               type: 'input',
               name: 'name',
               message: "Please add an employee's name",
-              validate: (nameInput) => {
-                if(nameInput) {
-                    return true;
-                } else {
-                    console.log('You cannot leave this field blank')
-                    return false
-                }
-            },
+              validate: validateFcn
           },
           {
               type: 'input',
               name: 'id',
               message: "Enter the employee ID number",
-              validate: (IDInput) => {
-                if(IDInput) {
-                    return true;
-                } else {
-                    console.log('You cannot leave this field blank')
-                    return false
-                }
-            },
+              validate: validateFcn
           },
           {
               type: 'list',
@@ -133,14 +99,7 @@ const addEmployee = () => {
             type: 'input',
             name: 'email',
             message: "Enter the Employee's email address",
-            validate: (emailInput) => {
-              if(emailInput) {
-                  return true;
-              } else {
-                  console.log('You cannot leave this field blank')
-                  return false
-              }
-            },
+            validate: validateFcn
         },
       ])
       .then((answers) => {
@@ -151,15 +110,7 @@ const addEmployee = () => {
                         type: 'input',
                         name: 'github',
                         message: "Enter the engineer's github username",
-                        validate: (githubInput) => {
-                            if(githubInput) {
-                                return true;
-                            } else {
-                                console.log('You cannot leave this field blank')
-                                return false
-                            }
-                          },
-
+                        validate: validateFcn
                     }
                 ])
                 .then((roleUpdate) => {
@@ -182,14 +133,7 @@ const addEmployee = () => {
                         type: 'input',
                         name: 'school',
                         message: "Enter the intern's school name",
-                        validate: (internInput) => {
-                            if(internInput) {
-                                return true;
-                            } else {
-                                console.log('You cannot leave this field blank')
-                                return false
-                            }
-                          },
+                        validate: validateFcn
                     }
                 ])
                 .then((roleUpdate) => {
@@ -227,24 +171,9 @@ const addAnotherEmployee = (team) => {
           }
       })
 }
-  
+
+
+
 managerInfo()
 // addEmployee()
 //  addAnotherEmployee()
-//   .then(addEmployee)
-    // .then((employeeList) => {
-    //     return generatePage(employeeList)
-    // })
-    // .then((HTML) => {
-    //     return writeFile(HTML)
-    // })
-    // .then((writeFileResponse) => {
-    //     console.log(writeFileResponse)
-    //     return copyFile()
-    // }) 
-    // .then((copyFileResponse) => {
-    //     console.log(copyFileResponse);
-    //   })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
