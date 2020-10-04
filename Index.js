@@ -11,8 +11,10 @@ const Manager = require('./lib/Manager')
 const generatePage = require('./src/page-template')
 const { writeFile, copyFile } = require('./generate-site')
 
+// empty array to place user input for employees 
 const employeeList = []
 
+// validate function for required answers for future use
 const validateFcn = input => {
     if(input) {
         return true;
@@ -23,6 +25,7 @@ const validateFcn = input => {
 
 const managerInfo = () => {
     inquirer
+    // Manager information questions
       .prompt([
           {
               type: 'input',
@@ -55,6 +58,7 @@ const managerInfo = () => {
               validate: validateFcn
           },
       ])
+    //   push answers to array
       .then((answers) => {
           const manager = new Manager(
               answers.name,
@@ -71,6 +75,7 @@ const managerInfo = () => {
 
 
 const addEmployee = () => {
+    // Add new Intern or Engineer
     console.log(`
     ====================
      Add a New Employee
@@ -154,18 +159,21 @@ const addEmployee = () => {
 };
 
 const addAnotherEmployee = () => {
+    // question to either end application or add another employee
     inquirer
       .prompt([
           {
               type: 'confirm',
               name: 'addNewEmployee',
-              message: 'Would you like to add another employee?',
+              message: 'Would you like to add another employee? ("No" will end the epplication and generate your page)',
               default: false
           },
       ])
       .then((employeeListArr) => {
+ //   if user wants to add another employee, redirect to add employee
         if(employeeListArr.addNewEmployee) {
           return addEmployee(employeeList);
+ // if the user is done, write the files
         } if (!employeeListArr.addNewEmployee) {
           console.log("All team members added!", employeeList);
           let pageHTML = generatePage(employeeList);
