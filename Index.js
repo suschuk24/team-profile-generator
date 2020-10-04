@@ -64,16 +64,17 @@ const managerInfo = () => {
               answers.officeNum
           );
           employeeList.push(manager);
-          console.log(employeeList)
+          console.log(employeeList);
+          addEmployee(employeeList)
       })
 }
 
 
 const addEmployee = () => {
     console.log(`
-    ======================
-    Add a New Employee
-    ======================
+    ====================
+     Add a New Employee
+    ====================
     `)
     inquirer
       .prompt([
@@ -152,7 +153,7 @@ const addEmployee = () => {
       });
 };
 
-const addAnotherEmployee = (team) => {
+const addAnotherEmployee = () => {
     inquirer
       .prompt([
           {
@@ -163,17 +164,21 @@ const addAnotherEmployee = (team) => {
           },
       ])
       .then((employeeListArr) => {
-          if(employeeListArr.addNewEmployee) {
-              return addEmployee(employeeList)
-          } if(!employeeListArr.addNewEmployee) {
-            console.log(employeeList)  
-            return employeeList
-          }
-      })
-}
+        if(employeeListArr.addNewEmployee) {
+          return addEmployee(employeeList);
+        } if (!employeeListArr.addNewEmployee) {
+          console.log("All team members added!", employeeList);
+          let pageHTML = generatePage(employeeList);
+          writeFile(pageHTML)
+            .then((writeFileResponse) => {
+              console.log(writeFileResponse);
+              return copyFile();
+            })
+            .then((copyFileResponse) => {
+              console.log(copyFileResponse);
+            });
+        }
+      });
+  };
 
-
-
-managerInfo()
-// addEmployee()
-//  addAnotherEmployee()
+managerInfo(employeeList)
